@@ -5,7 +5,7 @@ use crate::{
 };
 use colored::Colorize;
 
-pub fn make(profile_name: &str, version: &str) -> Result<(), AnyError> {
+pub fn make(profile_name: &str, version: Option<&str>) -> Result<(), AnyError> {
     let cwd = std::env::current_dir()?;
     let project = discover_project(cwd.clone())?;
     let history_dir = project.resolve_history_dir(profile_name)?;
@@ -21,7 +21,7 @@ pub fn make(profile_name: &str, version: &str) -> Result<(), AnyError> {
     to_make.name = format!(
         "{}-{}",
         chrono::Local::now().format("%Y%m%d_%H%M%S"),
-        version
+        version.unwrap_or("auto"),
     );
     let new_stage = Version::new_stage(&to_make.name);
 

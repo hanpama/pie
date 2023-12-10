@@ -3,7 +3,7 @@ use crate::{
     history::{DBHistory, FSHistory},
     project::discover_project,
 };
-
+use colored::Colorize;
 use postgres::{Client, NoTls};
 
 pub fn up(profile_name: &str, version: Option<&str>) -> Result<(), AnyError> {
@@ -16,7 +16,7 @@ pub fn up(profile_name: &str, version: Option<&str>) -> Result<(), AnyError> {
     let mut pg_client = Client::connect(&database_url, NoTls)?;
     let mut tx = pg_client.transaction()?;
 
-    let fsh = FSHistory::new(history_dir);
+    let fsh = FSHistory::from_dir(&history_dir)?;
     let mut dbh = DBHistory::new(&metadata_schema);
 
     dbh.ensure_initialized(&mut tx)?;
@@ -29,12 +29,21 @@ pub fn up(profile_name: &str, version: Option<&str>) -> Result<(), AnyError> {
         None => fsh.get_current_version()?,
     };
 
+    println!("On database version: {}", current_version.name);
+    println!("Applying upward migrations to {}:", to_version.name);
+    
     let versions = fsh.get_upward_range(&from_version, &to_version.name)?;
+    if versions.len() == 0 {
+        println!("  No migrations to apply.");
+        return Ok(());
+    }
 
-    for v in versions {
-        println!("migrating to version \"{}\"", v.name);
+    for version_name in versions {
+        let v = fsh.get_version(&version_name)?;
+        println!("  Applying version {}", v.name.green());
         for stmt in &v.up {
             tx.execute(stmt, &[]).unwrap();
+            println!("    {}", stmt.dimmed(),);
         }
         dbh.save_version(&mut tx, &v).unwrap();
     }

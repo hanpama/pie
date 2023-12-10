@@ -7,3 +7,8 @@ use crate::error::AnyError;
 pub fn sync() -> Result<(), AnyError> {
     todo!()
 }
+// or 'compare'?
+
+// compare --sync
+// compare --apply
+// sync --apply

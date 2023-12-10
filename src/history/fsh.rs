@@ -75,32 +75,26 @@ impl FSHistory {
         Ok(version)
     }
 
-    pub fn get_upward_range(&self, from: &str, to: &str) -> Result<Vec<Version>, FSHistoryError> {
-        let mut versions = self.get_downward_range(to, from)?;
-        versions.reverse();
-        Ok(versions)
-    }
-
-    pub fn get_downward_range(&self, from: &str, to: &str) -> Result<Vec<Version>, FSHistoryError> {
+    pub fn get_upward_range(&self, from: &str, to: &str) -> Result<Vec<String>, FSHistoryError> {
         let mut versions = vec![];
-        let mut curr = from.to_owned();
+        let mut curr = to.to_owned();
 
         loop {
             let v = self.get_version(&curr)?;
 
-            if curr == to {
-                versions.push(v);
+            if curr == from {
                 break;
             } else if let Some(previous) = v.previous.as_ref() {
                 curr = previous.clone();
-                versions.push(v);
+                versions.push(v.name);
             } else {
                 return Err(FSHistoryError::Unreachable {
-                    high: from.to_owned(),
-                    low: to.to_owned(),
+                    high: to.to_owned(),
+                    low: from.to_owned(),
                 });
             }
         }
+        versions.reverse();
         return Ok(versions);
     }
 

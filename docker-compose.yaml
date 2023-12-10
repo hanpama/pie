@@ -8,6 +8,4 @@ services:
     - POSTGRES_USER=postgres
     - POSTGRES_DB=postgres
     ports:
-    - 9010:5432
-    volumes:
-      - ./test:/docker-entrypoint-initdb.d
+    - 3100:5432

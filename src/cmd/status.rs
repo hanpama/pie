@@ -19,7 +19,7 @@ pub fn status(profile_name: &str) -> Result<(), AnyError> {
     let definition_dir = project.resolve_default_definitions_dir()?;
     let database_url = project.resolve_database_url(profile_name)?;
 
-    let fsh = FSHistory::new(history_dir);
+    let fsh = FSHistory::from_dir(&history_dir)?;
     let definition_snapshot = load_snpashot(&definition_dir)?;
 
     let fsh_stage_version = fsh.get_version(STAGE)?;
@@ -29,7 +29,7 @@ pub fn status(profile_name: &str) -> Result<(), AnyError> {
     let db_version_result = try_get_db_current_version(&database_url, &metadata_schema);
 
     match db_version_result {
-        Ok(dbh_version) => println!("On database version: {}", dbh_version.name),
+        Ok(dbh_version) => println!("On database version: {}", dbh_version.name.green()),
         Err(e) => println!("On database version: {}", e.to_string().red()),
     }
 
