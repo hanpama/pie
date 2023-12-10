@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:14.0-alpine
+    environment:
+    - POSTGRES_PASSWORD=23af728bc84f7800f4e9
+    - POSTGRES_USER=postgres
+    - POSTGRES_DB=postgres
+    ports:
+    - 9010:5432
+    volumes:
+      - ./test:/docker-entrypoint-initdb.d
