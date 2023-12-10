@@ -44,4 +44,15 @@ impl Database {
             .remove(schema)
             .ok_or(SnapshotError::schema_not_found(schema))
     }
+
+    pub fn merge(&mut self, other: Database) -> Result<(), SnapshotError> {
+        for (schema_name, schema) in other.schemas {
+            if self.has_schema(&schema_name) {
+                self.schemas.get_mut(&schema_name).unwrap().merge_schema(schema)?;
+            } else {
+                self.add_schema(schema)?;
+            }
+        }
+        Ok(())
+    }
 }

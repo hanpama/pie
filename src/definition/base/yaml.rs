@@ -76,16 +76,14 @@ fn create_node_from_mapping_key(key: &str) -> Result<Node, Error> {
 
     let mut found = false;
     for keyword in KEYWORDS.iter() {
-        if key.starts_with(keyword) {
+        if key.to_lowercase().starts_with(keyword) {
             node.r#type = keyword;
             found = true;
             break;
         }
     }
     if !found {
-        return Err(Error {
-            message: format!("Invalid key: {}", key),
-        });
+        return Err(Error::new(format!("Invalid key: {}", key)));
     }
     let name = key[node.r#type.len()..].trim().to_string();
     if !name.is_empty() {
@@ -123,9 +121,7 @@ fn parse_serde_value_to_ddl_value(val: &serde_yaml::Value) -> Result<Value, Erro
             return Ok(Value::List(parsed));
         }
         _ => {
-            return Err(Error {
-                message: format!("Invalid value: {:?}", val),
-            });
+            return Err(Error::new(format!("Invalid value: {:?}", val)));
         }
     }
 }
@@ -137,13 +133,10 @@ fn parse_serde_number_to_ddl_number(val: &serde_yaml::Number) -> Result<Number, 
     if val.is_i64() {
         return Ok(Number::Integer(val.as_i64().unwrap()));
     }
-    Err(Error {
-        message: format!("Invalid number: {:?}", val),
-    })
+    Err(Error::new(format!("Invalid number: {:?}", val)))
 }
 
 pub fn render_nodes_to_mapping(nodes: &Vec<Node>) -> serde_yaml::Value {
-    
     let mut map = serde_yaml::Mapping::new();
 
     for node in nodes {
@@ -151,7 +144,7 @@ pub fn render_nodes_to_mapping(nodes: &Vec<Node>) -> serde_yaml::Value {
         let value = render_node_to_mapping_value(node);
         map.insert(key, value);
     }
-    
+
     serde_yaml::Value::Mapping(map)
 }
 

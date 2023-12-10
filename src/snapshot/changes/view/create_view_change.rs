@@ -2,7 +2,7 @@ use super::DropViewChange;
 use crate::snapshot::{changes::Change, Database, SnapshotError, View};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct CreateViewChange {
     pub schema: String,
     pub view: String,

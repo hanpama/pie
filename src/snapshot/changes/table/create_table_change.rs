@@ -7,14 +7,14 @@ use crate::{
 
 use super::DropTableChange;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct CreateTableChange {
     pub schema: String,
     pub table: String,
     pub columns: Vec<CreateTableChangeColumn>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct CreateTableChangeColumn {
     pub name: String,
     pub data_type: String,

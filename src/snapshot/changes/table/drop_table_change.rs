@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use super::CreateTableChange;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct DropTableChange {
     pub schema: String,
     pub table: String,

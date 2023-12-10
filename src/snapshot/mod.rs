@@ -6,3 +6,4 @@ pub use error::SnapshotError;
 pub use types::*;
 pub mod defaults;
 pub use diff::*;
+mod tests;

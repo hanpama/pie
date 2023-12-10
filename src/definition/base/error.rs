@@ -4,10 +4,8 @@ pub struct Error {
 }
 
 impl Error {
-    pub fn new(message: &str) -> Self {
-        Self {
-            message: message.to_owned(),
-        }
+    pub fn new(message: String) -> Self {
+        Self { message }
     }
 }
 

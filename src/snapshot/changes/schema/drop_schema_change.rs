@@ -2,7 +2,7 @@ use super::CreateSchemaChange;
 use crate::snapshot::{changes::Change, Database, Schema, SnapshotError};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct DropSchemaChange {
     pub schema_name: String,
 }

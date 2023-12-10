@@ -3,7 +3,7 @@ use crate::snapshot::{Database, Function, SnapshotError};
 use crate::util::sqlfmt::sql_qa;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct CreateFunctionChange {
     pub schema: String,
     pub function: String,

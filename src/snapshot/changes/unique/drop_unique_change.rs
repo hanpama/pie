@@ -1,11 +1,11 @@
 use super::AddUniqueChange;
 use crate::{
     snapshot::{changes::Change, Database, SnapshotError, Unique},
-    util::sqlfmt::{sql_qa, sql_ql, sql_qn},
+    util::sqlfmt::{sql_qa, sql_qn},
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct DropUniqueChange {
     pub schema: String,
     pub table: String,

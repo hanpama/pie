@@ -3,7 +3,7 @@ use crate::snapshot::{Database, ForeignKey, SnapshotError};
 use crate::util::sqlfmt::{sql_qa, sql_qn};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct AlterForeignKeyChange {
     pub schema: String,
     pub table: String,

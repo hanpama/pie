@@ -1,4 +1,4 @@
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 use crate::{
     definition::{
@@ -44,8 +44,17 @@ pub fn load_snpashot(dir_path: &PathBuf) -> Result<Database, AnyError> {
 
 fn load_yaml_file_into(database: &mut Database, file_path: &PathBuf) -> Result<(), AnyError> {
     let s = std::fs::read_to_string(file_path)?;
-    let mapping: serde_yaml::Mapping = serde_yaml::from_str(&s)?;
+    let snapshot = load_yaml_string(&s)?;
+    database.merge(snapshot)?;
+
+    Ok(())
+}
+
+pub fn load_yaml_string(s: &str) -> Result<Database, AnyError> {
+    let mapping: serde_yaml::Mapping = serde_yaml::from_str(s)?;
     let nodes = parse_mapping_to_nodes(&mapping)?;
+
+    let mut database = Database::new();
 
     for node in nodes {
         let parsed_schema = parse_schema_definition(&node)?;
@@ -57,7 +66,7 @@ fn load_yaml_file_into(database: &mut Database, file_path: &PathBuf) -> Result<(
         }
     }
 
-    Ok(())
+    Ok(database)
 }
 
 fn collect_yaml_file(dir_path: &PathBuf) -> Result<Vec<PathBuf>, AnyError> {

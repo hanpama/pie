@@ -28,7 +28,7 @@ pub use view::*;
 
 macro_rules! define_change_impl {
     ($enum_name:ident, $($variant:ident),*) => {
-        #[derive(Debug, Serialize, Deserialize)]
+        #[derive(Debug, Serialize, Deserialize, PartialEq)]
         #[serde(tag="type", content="change")]
         pub enum $enum_name {
             $( $variant($variant), )*

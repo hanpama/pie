@@ -1,11 +1,11 @@
 use super::CreateIndexChange;
 use crate::{
     snapshot::{changes::Change, Database, Index, SnapshotError},
-    util::sqlfmt::{sql_l, sql_qa, sql_qn},
+    util::sqlfmt::sql_qa,
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct DropIndexChange {
     pub schema: String,
     pub index: String,
