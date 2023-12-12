@@ -201,14 +201,6 @@ fn diff_table_update(s: &Table, t: &Table) -> Changeset {
             changes.append(&mut diff_constraint_create(ti));
         }
     }
-    for si in s.iter_constraints() {
-        if t.has_constraint(si.get_name()) {
-            let ti = t.get_constraint(si.get_name()).unwrap();
-            changes.append(&mut diff_constraint_update(si, ti));
-        } else {
-            changes.append(&mut diff_constraint_drop(si));
-        }
-    }
 
     return changes;
 }
@@ -398,10 +390,7 @@ fn diff_check_create(t: &Check) -> Changeset {
 fn diff_check_update(s: &Check, t: &Check) -> Changeset {
     let mut changes = Changeset::new();
 
-    if s.expression != t.expression
-        || s.deferrable != t.deferrable
-        || s.initially_deferred != t.initially_deferred
-    {
+    if s.expression != t.expression {
         changes.push(DropCheckChange::new(s));
         changes.push(AddCheckChange::new(t));
     } else if s.deferrable != t.deferrable || s.initially_deferred != t.initially_deferred {
