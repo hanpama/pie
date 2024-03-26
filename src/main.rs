@@ -10,8 +10,8 @@ mod util;
 use clap::{ArgMatches, Command};
 
 fn main() {
-    let cli = Command::new("pie")
-        .bin_name("pie")
+    let cli = Command::new("podo")
+        .bin_name("podo")
         .version("0.1.0")
         .author("Kyungil Choi <hanpama@gmail.com>")
         .about("PostgreSQL schema management tool")
@@ -68,7 +68,7 @@ fn main() {
 
     let matches = cli.get_matches();
 
-    // let dotpieyaml = std::path::Path::new(".pie.yaml");
+    // let dotpodoyaml = std::path::Path::new(".podo.yaml");
     // // resolve the workspace root
 
     let res = match matches.subcommand() {

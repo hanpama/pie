@@ -6,11 +6,11 @@ use std::{collections::HashMap, fmt::Display, fs, path::PathBuf};
 
 /// Project
 ///
-/// A project is a directory with a .pie.yaml file in it.
+/// A project is a directory with a .podo.yaml file in it.
 ///
 /// ```text
 /// .
-/// ├── .pie.yaml
+/// ├── .podo.yaml
 /// └── database
 ///     ├── definitions
 ///     │   └── public.yaml
@@ -19,7 +19,7 @@ use std::{collections::HashMap, fmt::Display, fs, path::PathBuf};
 ///         └── stage.yaml
 /// ```
 ///
-/// The .pie.yaml file contains the following:
+/// The .podo.yaml file contains the following:
 ///
 /// ```yaml
 /// database:
@@ -101,7 +101,7 @@ pub struct YAMLProjectProfile {
     pub metadata_schema: String,
 }
 
-const CONFIG_FILE: &str = ".pie.yaml";
+const CONFIG_FILE: &str = ".podo.yaml";
 const DEFAULT_PROFILE: &str = "database";
 
 pub fn discover_project(current_dir: PathBuf) -> Result<Project, ProjectError> {
@@ -165,7 +165,7 @@ pub fn create_base_yaml_project() -> YAMLProject {
             database_url: "postgresql://localhost:5432/postgres".to_string(),
             history: "database/history".to_string(),
             definitions: "database/definitions".to_string(),
-            metadata_schema: "pie_meta".to_string(),
+            metadata_schema: "podo_meta".to_string(),
         },
     );
     project
