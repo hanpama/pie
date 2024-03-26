@@ -27,7 +27,7 @@ impl DropTableChange {
     }
 
     pub fn render_sql(&self) -> String {
-        format!("DROP TABLE {}", sql_qa(&self.schema, &self.table),)
+        format!("DROP TABLE {};", sql_qa(&self.schema, &self.table),)
     }
 
     pub fn revert(&self, target: &Database) -> Result<Change, SnapshotError> {

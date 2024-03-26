@@ -1,4 +1,4 @@
-use postgres::Client;
+use postgres::{Client, Transaction};
 use std::env::{self};
 
 pub fn get_test_connection() -> Client {
@@ -8,7 +8,7 @@ pub fn get_test_connection() -> Client {
 
 fn get_database_url() -> String {
     env::var("DATABASE_URL").unwrap_or_else(|_| {
-        "postgres://postgres:23af728bc84f7800f4e9@localhost:9010/postgres?sslmode=disable"
+        "postgres://postgres:23af728bc84f7800f4e9@localhost:3100/postgres?sslmode=disable"
             .to_owned()
     })
 }

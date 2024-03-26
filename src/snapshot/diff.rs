@@ -112,6 +112,8 @@ fn diff_schema_drop(s: &Schema) -> Changeset {
         changes.append(&mut diff_function_drop(si));
     }
 
+    changes.push(DropSchemaChange::new(s));
+
     return changes;
 }
 
@@ -184,10 +186,7 @@ fn diff_table_update(s: &Table, t: &Table) -> Changeset {
         }
     }
     for si in s.iter_columns() {
-        if t.has_column(si.get_name()) {
-            let ti = t.get_column(si.get_name()).unwrap();
-            changes.append(&mut diff_column_update(si, ti));
-        } else {
+        if !t.has_column(si.get_name()) {
             changes.append(&mut diff_column_drop(si));
         }
     }
@@ -201,21 +200,17 @@ fn diff_table_update(s: &Table, t: &Table) -> Changeset {
             changes.append(&mut diff_constraint_create(ti));
         }
     }
+    for si in s.iter_constraints() {
+        if !t.has_constraint(si.get_name()) {
+            changes.append(&mut diff_constraint_drop(si));
+        }
+    }
 
     return changes;
 }
 
 fn diff_table_drop(s: &Table) -> Changeset {
     let mut changes = Changeset::new();
-
-    // constraints
-    for si in s.iter_constraints() {
-        changes.append(&mut diff_constraint_drop(si));
-    }
-    // columns
-    for si in s.iter_columns() {
-        changes.append(&mut diff_column_drop(si));
-    }
 
     changes.push(DropTableChange::new(s));
 
@@ -438,8 +433,14 @@ fn diff_function_create(t: &Function) -> Changeset {
 fn diff_function_update(s: &Function, t: &Function) -> Changeset {
     let mut changes = Changeset::new();
 
-    changes.push(DropFunctionChange::new(s));
-    changes.push(CreateFunctionChange::new(t));
+    if s.body != t.body
+        || s.language != t.language
+        || s.returns != t.returns
+        || s.volatility != t.volatility
+    {
+        changes.push(DropFunctionChange::new(s));
+        changes.push(CreateFunctionChange::new(t));
+    }
 
     return changes;
 }
@@ -482,8 +483,19 @@ fn diff_sequence_create(t: &Sequence) -> Changeset {
 fn diff_sequence_update(s: &Sequence, t: &Sequence) -> Changeset {
     let mut changes = Changeset::new();
 
-    changes.push(DropSequenceChange::new(s));
-    changes.push(CreateSequenceChange::new(t));
+    if s.data_type != t.data_type
+        || s.increment != t.increment
+        || s.min_value != t.min_value
+        || s.max_value != t.max_value
+        || s.start != t.start
+        || s.cache != t.cache
+        || s.cycle != t.cycle
+        || s.owned_by_table != t.owned_by_table
+        || s.owned_by_column != t.owned_by_column
+    {
+        changes.push(DropSequenceChange::new(s));
+        changes.push(CreateSequenceChange::new(t));
+    }
 
     return changes;
 }

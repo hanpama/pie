@@ -44,7 +44,7 @@ pub fn parse_schema_definition(n: &Node) -> Result<Schema, Error> {
                 parse_sequence_definition(&ctx, cn).and_then(|def| Ok(relations.push(def.into())))
             }
             "index" => {
-                parse_index_definition(&ctx, n).and_then(|def| Ok(relations.push(def.into())))
+                parse_index_definition(&ctx, cn).and_then(|def| Ok(relations.push(def.into())))
             }
             "function" => {
                 parse_function_definition(&ctx, cn).and_then(|def| Ok(functions.push(def)))

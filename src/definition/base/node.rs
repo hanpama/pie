@@ -14,6 +14,7 @@ impl Default for Node {
         }
     }
 }
+const EMPTY_NODES: &'static Vec<Node> = &Vec::new();
 
 impl Node {
     pub fn new(r#type: &'static str) -> Node {
@@ -27,6 +28,9 @@ impl Node {
         return self.name.clone();
     }
     pub fn get_nodes(&self) -> Option<&Vec<Node>> {
+        if self.child.is_none() {
+            return Some(EMPTY_NODES);
+        }
         return self.child.as_ref()?.to_nodes();
     }
     pub fn get_boolean_value(&self) -> Option<bool> {

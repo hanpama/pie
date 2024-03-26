@@ -52,7 +52,7 @@ impl CreateSequenceChange {
             owned_by_column: None,
         };
 
-        schema.add_relation(sequence.into());
+        schema.add_relation(sequence.into())?;
         Ok(())
     }
 
