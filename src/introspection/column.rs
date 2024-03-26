@@ -1,4 +1,4 @@
-use postgres::{Client, Error};
+use postgres::{Error, Transaction};
 
 pub struct Column {
     pub schema: String,
@@ -12,7 +12,7 @@ pub struct Column {
     pub type_mod: Option<i32>,
 }
 
-fn introspect_columns(client: &mut Client, schemas: Vec<String>) -> Result<Vec<Column>, Error> {
+fn introspect_columns(client: &mut Transaction, schemas: &[&str]) -> Result<Vec<Column>, Error> {
     let query = include_str!("column.sql");
     let stmt = client.prepare(query)?;
     let rows = client.query(&stmt, &[&schemas])?;
@@ -41,8 +41,9 @@ mod tests {
     use crate::util::test::get_test_connection;
 
     #[test]
-    fn test_introspect_check_constraints() {
+    fn test_introspect_columns() {
         let mut conn = get_test_connection();
-        introspect_columns(&mut conn, vec!["public".to_owned()]).unwrap();
+        let mut tx = conn.transaction().unwrap();
+        introspect_columns(&mut tx, &vec!["public"]).unwrap();
     }
 }

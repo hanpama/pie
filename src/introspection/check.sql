@@ -10,9 +10,7 @@ SELECT
     con.condeferrable
         is_deferrable,
     con.condeferred
-        initially_deferred,
-    COALESCE(pg_catalog.obj_description(con.oid, 'pg_constraint'), '')
-        description
+        initially_deferred
 FROM pg_constraint con
     LEFT JOIN pg_namespace rs ON rs.oid = con.connamespace
     LEFT JOIN pg_class c ON c.oid = con.conrelid

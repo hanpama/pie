@@ -22,7 +22,7 @@ SELECT
     COALESCE(
         CASE a.atttypmod WHEN -1 THEN NULL ELSE a.atttypmod END,
         CASE t.typtypmod WHEN -1 THEN NULL ELSE t.typtypmod END
-    ) typmod,
+    ) typmod
 FROM pg_attribute a
     LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
     JOIN (pg_class c JOIN pg_namespace nc ON c.relnamespace = nc.oid) ON a.attrelid = c.oid

@@ -13,7 +13,7 @@ pub fn clone(profile_name: &str) -> Result<(), AnyError> {
     let mut pg_client = Client::connect(&database_url, NoTls)?;
     let mut tx = pg_client.transaction()?;
 
-    let snapshot = introspect(tx)?;
+    let snapshot = introspect(&mut tx, &vec!["public"])?;
 
     save_snapshot(&definition_dir.join("public.yaml"), &snapshot)?;
 
