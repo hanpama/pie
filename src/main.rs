@@ -9,10 +9,12 @@ mod util;
 
 use clap::{ArgMatches, Command};
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     let cli = Command::new("podo")
         .bin_name("podo")
-        .version("0.1.0")
+        .version(VERSION)
         .author("Kyungil Choi <hanpama@gmail.com>")
         .about("PostgreSQL schema management tool")
         .subcommand_required(true)
@@ -54,16 +56,17 @@ fn main() {
           .arg(clap::arg!(--"version" <String>))
         )
         .subcommand(
-          Command::new("compare")
-          .about("calculates the changes between the definition snapshot and the database snapshot. when --apply flag is specified, it applies the changes to the database.")
-        )
-        .subcommand(
           Command::new("clone")
           .about("inspects the database and creates snapshot and the initial migration")
         )
         .subcommand(
           Command::new("print")
           .about("prints the definition snapshot")
+        )
+        .subcommand(
+          Command::new("sync")
+          .about("calculates the changes between the definition snapshot and the database snapshot and sets the database version it to the given version")
+          .arg(clap::arg!(--"profile" <String>).default_value("database"))
         );
 
     let matches = cli.get_matches();
@@ -77,12 +80,14 @@ fn main() {
         Some(("up", args)) => cmd::up(get_profile(args), get_version(args)),
         Some(("down", args)) => cmd::down(get_profile(args), get_version(args)),
         Some(("clone", args)) => cmd::clone(get_profile(args)),
+        Some(("sync", args)) => cmd::sync(get_profile(args)),
         // Some(("print", _)) => cmd::print(),
         // Some(("compare", _)) => cmd::compare(),
         _ => unreachable!(),
     };
-
-    res.unwrap();
+    if let Err(e) = res {
+        eprintln!("{}", e);
+    }
 }
 
 fn get_profile(args: &ArgMatches) -> &String {
