@@ -63,7 +63,7 @@ pub fn parse_primary_key_definition(
     })
 }
 
-pub fn render_primary_key_definition(ctx: &Context, def: &PrimaryKey) -> Node {
+pub fn render_primary_key_definition(_ctx: &Context, def: &PrimaryKey) -> Node {
     let mut subnodes: Vec<Node> = Vec::new();
 
     subnodes.push(Node::new("primary key").with_string_varargs_value(def.columns.clone()));

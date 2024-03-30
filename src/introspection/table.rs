@@ -1,5 +1,6 @@
 use postgres::{Error, Transaction};
 
+#[derive(Debug, PartialEq)]
 pub struct Table {
     pub schema: String,
     pub name: String,
@@ -24,12 +25,23 @@ pub fn introspect_tables(client: &mut Transaction, schemas: &[&str]) -> Result<V
 #[cfg(test)]
 mod tests {
     use super::introspect_tables;
-    use crate::util::test::get_test_connection;
+    use crate::{introspection::table::Table, util::test::get_test_connection};
 
     #[test]
     fn test_introspect_tables() {
         let mut conn = get_test_connection();
         let mut tx = conn.transaction().unwrap();
-        introspect_tables(&mut tx, &vec!["public"]).unwrap();
+        tx.execute("CREATE SCHEMA test_table", &[]).unwrap();
+        tx.execute("CREATE TABLE test_table.foo (id SERIAL PRIMARY KEY);", &[])
+            .unwrap();
+        let res = introspect_tables(&mut tx, &vec!["test_table"]).unwrap();
+
+        assert_eq!(
+            res,
+            vec![Table {
+                schema: "test_table".to_string(),
+                name: "foo".to_string(),
+            }]
+        );
     }
 }

@@ -12,7 +12,7 @@ pub struct Index {
     pub expressions: Option<String>,
 }
 
-fn introspect_indexes(client: &mut Transaction, schemas: &[&str]) -> Result<Vec<Index>, Error> {
+pub fn introspect_indexes(client: &mut Transaction, schemas: &[&str]) -> Result<Vec<Index>, Error> {
     let query = include_str!("index.sql");
     let stmt = client.prepare(query)?;
     let rows = client.query(&stmt, &[&schemas])?;

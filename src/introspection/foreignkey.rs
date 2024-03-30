@@ -15,7 +15,7 @@ pub struct ForeignKey {
     pub delete_rule: String,
 }
 
-fn introspect_foreign_keys(
+pub fn introspect_foreign_keys(
     client: &mut Transaction,
     schemas: &[&str],
 ) -> Result<Vec<ForeignKey>, Error> {
