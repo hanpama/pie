@@ -2,6 +2,10 @@
 name = "podo"
 version = "0.1.0"
 edition = "2021"
+description = "PostgreSQL schema management tool"
+homepage = "https://github.com/hanpama/podo"
+repository = "https://github.com/hanpama/podo"
+license = "MIT"
 
 [dependencies]
 serde = { version="1.0", features = ["derive"]}
