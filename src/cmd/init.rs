@@ -1,11 +1,16 @@
 use crate::definition;
 use crate::error::AnyError;
 use crate::history::{FSHistory, Version};
-use crate::project::initialize_project;
+use crate::project::{discover_project, initialize_project};
 use crate::snapshot::Database;
 
 pub fn init() -> Result<(), AnyError> {
     let cwd = std::env::current_dir()?;
+
+    if let Ok(proj) = discover_project(cwd.clone()) {
+        println!("Project already exists at: {}", proj.base_dir.display());
+        return Ok(());
+    }
 
     let project = initialize_project(cwd)?;
     let history_dir = project.resolve_default_history_dir()?;

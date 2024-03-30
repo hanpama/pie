@@ -39,7 +39,7 @@ use std::{collections::HashMap, fmt::Display, fs, path::PathBuf};
 ///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Project {
-    base_dir: PathBuf,
+    pub base_dir: PathBuf,
     profiles: Vec<Profile>,
 }
 
