@@ -43,7 +43,7 @@ pub fn parse_table_definition(schema_name: &str, n: &Node) -> Result<Table, Erro
 
     let mut table = Table::new(schema_name, &name);
     for column in columns {
-        table.add_column(column);
+        table.add_column(column).unwrap();
     }
     for pk in constraints {
         table.add_constraint(pk).unwrap();

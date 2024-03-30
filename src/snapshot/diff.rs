@@ -1,7 +1,7 @@
 use super::changes::*;
 use super::types::*;
 
-pub struct Changeset {
+struct Changeset {
     changes: Vec<Change>,
 }
 
@@ -14,18 +14,6 @@ impl Changeset {
     }
     pub fn append(&mut self, other: &mut Changeset) {
         self.changes.append(&mut other.changes);
-    }
-    pub fn len(&self) -> usize {
-        self.changes.len()
-    }
-}
-
-impl IntoIterator for Changeset {
-    type Item = Change;
-    type IntoIter = std::vec::IntoIter<Change>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.changes.into_iter()
     }
 }
 
