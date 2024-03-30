@@ -47,7 +47,7 @@ mod tests {
         let mut tx = conn.transaction().unwrap();
         tx.execute("CREATE SCHEMA test_view", &[]).unwrap();
         tx.execute(
-            "CREATE VIEW test_view.view1 AS SELECT 1",
+            "CREATE VIEW test_view.view1 AS SELECT 1 AS column1;",
             &[],
         ).unwrap();
         let res = introspect_views(&mut tx, &vec!["test_view"]).unwrap();
@@ -57,7 +57,7 @@ mod tests {
                 super::View {
                     schema: "test_view".to_string(),
                     name: "view1".to_string(),
-                    view_definition: "SELECT 1".to_string(),
+                    view_definition: "SELECT 1 AS column1".to_string(),
                     check_option: "NONE".to_string(),
                     is_updatable: false,
                     is_insertable_into: false,
