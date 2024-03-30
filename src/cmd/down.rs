@@ -12,7 +12,6 @@ pub fn down(profile_name: &str, version: Option<&str>) -> Result<(), AnyError> {
     let mut pg_client = Client::connect(&database_url, NoTls)?;
     let mut tx = pg_client.transaction()?;
 
-    // let fsh = FSHistory::new(history_dir);
     let mut dbh = DBHistory::new(&metadata_schema);
 
     dbh.ensure_initialized(&mut tx)?;

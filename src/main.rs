@@ -68,9 +68,6 @@ fn main() {
 
     let matches = cli.get_matches();
 
-    // let dotpodoyaml = std::path::Path::new(".podo.yaml");
-    // // resolve the workspace root
-
     let res = match matches.subcommand() {
         Some(("init", _)) => cmd::init(),
         Some(("status", args)) => cmd::status(get_profile(args)),
@@ -79,9 +76,9 @@ fn main() {
         Some(("make", args)) => cmd::make(get_profile(args), get_version(args)),
         Some(("up", args)) => cmd::up(get_profile(args), get_version(args)),
         Some(("down", args)) => cmd::down(get_profile(args), get_version(args)),
+        Some(("clone", args)) => cmd::clone(get_profile(args)),
         // Some(("print", _)) => cmd::print(),
         // Some(("compare", _)) => cmd::compare(),
-        // Some(("clone", _)) => cmd::clone(),
         _ => unreachable!(),
     };
 
