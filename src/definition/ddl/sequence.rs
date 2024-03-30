@@ -100,7 +100,7 @@ pub fn parse_sequence_definition(ctx: &Context, n: &Node) -> Result<Sequence, Er
     })
 }
 
-pub fn render_sequence_definition(ctx: &Context, def: &Sequence) -> Node {
+pub fn render_sequence_definition(_ctx: &Context, def: &Sequence) -> Node {
     let mut subnodes: Vec<Node> = Vec::new();
 
     if def.data_type != defaults::get_sequence_data_type() {

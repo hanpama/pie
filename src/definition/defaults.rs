@@ -1,7 +1,3 @@
-pub fn get_default_column_not_null() -> bool {
-    false
-}
-
 pub fn get_constraint_deferrable() -> bool {
     false
 }

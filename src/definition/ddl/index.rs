@@ -1,10 +1,10 @@
 use crate::{
     definition::{
+        base::Node,
         ddl::coerce::{
             coerce_boolean_value, coerce_name, coerce_name_and_string_varargs_value, coerce_nodes,
-            coerce_string_value, coerce_string_varargs_value,
+            coerce_string_value,
         },
-        base::Node,
         defaults,
     },
     snapshot::Index,
@@ -59,7 +59,7 @@ pub fn parse_index_definition(ctx: &Context, n: &Node) -> Result<Index, Error> {
     })
 }
 
-pub fn render_index_definition(ctx: &Context, def: &Index) -> Node {
+pub fn render_index_definition(_ctx: &Context, def: &Index) -> Node {
     let mut subnodes: Vec<Node> = Vec::new();
 
     if def.unique != defaults::get_index_unique() {

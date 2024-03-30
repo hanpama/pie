@@ -1,7 +1,7 @@
 use crate::{
     definition::{
-        ddl::coerce::{coerce_boolean_value, coerce_name, coerce_nodes, coerce_string_value},
         base::Node,
+        ddl::coerce::{coerce_name, coerce_nodes, coerce_string_value},
         defaults,
     },
     snapshot::Function,
@@ -60,7 +60,7 @@ pub fn parse_function_definition(ctx: &Context, n: &Node) -> Result<Function, Er
     })
 }
 
-pub fn render_function_definition(ctx: &Context, def: &Function) -> Node {
+pub fn render_function_definition(_ctx: &Context, def: &Function) -> Node {
     let mut subnodes: Vec<Node> = Vec::new();
 
     subnodes.push(Node::new("as").with_string_value(def.body.clone()));

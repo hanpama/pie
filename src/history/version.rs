@@ -14,16 +14,6 @@ pub struct Version {
 }
 
 impl Version {
-    pub fn new(name: String, previous: Option<String>) -> Self {
-        Self {
-            name,
-            previous,
-            changes: vec![],
-            up: vec![],
-            down: vec![],
-        }
-    }
-
     pub fn new_init() -> Self {
         Self {
             name: INIT.to_string(),

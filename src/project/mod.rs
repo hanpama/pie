@@ -2,8 +2,6 @@ use crate::util::expand::expand_envvar;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, fmt::Display, fs, path::PathBuf};
 
-// mod yaml;
-
 /// Project
 ///
 /// A project is a directory with a .podo.yaml file in it.
