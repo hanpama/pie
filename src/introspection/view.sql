@@ -4,7 +4,7 @@ SELECT
     c.relname
         AS name,
     CASE
-        WHEN pg_has_role(c.relowner, 'USAGE'::text) THEN left(pg_get_viewdef(c.oid), -1)
+        WHEN pg_has_role(c.relowner, 'USAGE'::text) THEN left(trim(pg_get_viewdef(c.oid)), -1)
         ELSE NULL::text
     END
         AS view_definition,

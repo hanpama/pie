@@ -83,6 +83,5 @@ mod tests {
                 owned_by_column_name: None,
             }]
         );
-        tx.rollback().unwrap();
     }
 }

@@ -1,10 +1,14 @@
-use postgres::{Transaction, Error};
+use postgres::{Error, Transaction};
 
+#[derive(Debug, PartialEq)]
 pub struct Schema {
     pub name: String,
 }
 
-pub fn introspect_schemas(client: &mut Transaction, schemas: &[&str]) -> Result<Vec<Schema>, Error> {
+pub fn introspect_schemas(
+    client: &mut Transaction,
+    schemas: &[&str],
+) -> Result<Vec<Schema>, Error> {
     let query = include_str!("schema.sql");
     let stmt = client.prepare(query)?;
     let rows = client.query(&stmt, &[&schemas])?;
@@ -20,12 +24,20 @@ pub fn introspect_schemas(client: &mut Transaction, schemas: &[&str]) -> Result<
 #[cfg(test)]
 mod tests {
     use super::introspect_schemas;
-    use crate::util::test::get_test_connection;
+    use crate::{introspection::schema::Schema, util::test::get_test_connection};
 
     #[test]
     fn test_introspect_schemas() {
         let mut conn = get_test_connection();
         let mut tx = conn.transaction().unwrap();
-        introspect_schemas(&mut tx, &vec!["public"]).unwrap();
+        tx.execute("CREATE SCHEMA test_schema", &[]).unwrap();
+        let res = introspect_schemas(&mut tx, &vec!["test_schema"]).unwrap();
+
+        assert_eq!(
+            res,
+            vec![Schema {
+                name: "test_schema".to_string()
+            }]
+        );
     }
 }

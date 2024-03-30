@@ -1,5 +1,6 @@
 use postgres::{Error, Transaction};
 
+#[derive(PartialEq, Debug)]
 pub struct Function {
     pub schema: String,
     pub name: String,
@@ -35,12 +36,31 @@ pub fn introspect_functions(
 #[cfg(test)]
 mod tests {
     use super::introspect_functions;
-    use crate::util::test::get_test_connection;
+    use crate::{introspection::function::Function, util::test::get_test_connection};
 
     #[test]
     fn test_introspect_functions() {
         let mut conn = get_test_connection();
         let mut tx = conn.transaction().unwrap();
-        introspect_functions(&mut tx, &vec!["pg_catalog"]).unwrap();
+        tx.execute("CREATE SCHEMA test_function", &[]).unwrap();
+        tx.execute(
+            "CREATE FUNCTION test_function.func1()
+            RETURNS integer
+            LANGUAGE sql
+            AS $$SELECT 1;$$;",
+            &[],
+        ).unwrap();
+        let res = introspect_functions(&mut tx, &vec!["test_function"]).unwrap();
+
+        assert_eq!(res, vec![
+            Function {
+                schema: "test_function".to_string(),
+                name: "func1".to_string(),
+                body: "SELECT 1;".to_string(),
+                language: "sql".to_string(),
+                returns: "integer".to_string(),
+                volatility: "VOLATILE".to_string(),
+            },
+        ]);
     }
 }

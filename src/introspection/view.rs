@@ -1,5 +1,6 @@
 use postgres::{Error, Transaction};
 
+#[derive(Debug, PartialEq)]
 pub struct View {
     pub schema: String,
     pub name: String,
@@ -44,6 +45,27 @@ mod tests {
     fn test_introspect_views() {
         let mut conn = get_test_connection();
         let mut tx = conn.transaction().unwrap();
-        introspect_views(&mut tx, &vec!["public"]).unwrap();
+        tx.execute("CREATE SCHEMA test_view", &[]).unwrap();
+        tx.execute(
+            "CREATE VIEW test_view.view1 AS SELECT 1",
+            &[],
+        ).unwrap();
+        let res = introspect_views(&mut tx, &vec!["test_view"]).unwrap();
+        assert_eq!(
+            res,
+            vec![
+                super::View {
+                    schema: "test_view".to_string(),
+                    name: "view1".to_string(),
+                    view_definition: "SELECT 1".to_string(),
+                    check_option: "NONE".to_string(),
+                    is_updatable: false,
+                    is_insertable_into: false,
+                    is_trigger_updatable: false,
+                    is_trigger_deletable: false,
+                    is_trigger_insertable_into: false,
+                }
+            ]
+        );
     }
 }

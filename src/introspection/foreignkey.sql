@@ -3,7 +3,7 @@ SELECT
     con.conname AS constraint_name,
     c.relname AS constraint_table_name,
     (
-			SELECT array_agg(pa.attname::TEXT)
+			SELECT array_agg(pa.attname)
 			FROM UNNEST(con.conkey) ck(attnum)
 			JOIN pg_catalog.pg_attribute pa ON pa.attrelid = con.conrelid AND pa.attnum = ck.attnum
 		) AS table_columns,
@@ -11,42 +11,42 @@ SELECT
     npkc.nspname AS target_schema,
     fc.relname AS target_table_name,
 	(
-		SELECT array_agg(pa.attname::TEXT)
+		SELECT array_agg(pa.attname)
 		FROM pg_catalog.pg_attribute pa
 		WHERE fc.oid = pa.attrelid
 		AND fc.oid =
 			CASE pkc.contype
-				WHEN 'f'::"char" THEN pkc.confrelid
+				WHEN 'f' THEN pkc.confrelid
 				ELSE pkc.conrelid
 			END AND (pa.attnum = ANY (
 			CASE pkc.contype
-				WHEN 'f'::"char" THEN pkc.confkey
+				WHEN 'f' THEN pkc.confkey
 			ELSE pkc.conkey
 		END)) AND NOT pa.attisdropped 
 	) AS target_columns,
 	con.condeferrable AS constraint_deferrable,
 	con.condeferred AS constraint_deferred,
     CASE con.confmatchtype
-        WHEN 'f'::"char" THEN 'FULL'::text
-        WHEN 'p'::"char" THEN 'PARTIAL'::text
-        WHEN 's'::"char" THEN 'NONE'::text
-        ELSE NULL::text
+        WHEN 'f'::"char" THEN 'FULL'
+        WHEN 'p'::"char" THEN 'PARTIAL'
+        WHEN 's'::"char" THEN 'NONE'
+        ELSE NULL
     END::information_schema.character_data AS match_option,
     CASE con.confupdtype
-        WHEN 'c'::"char" THEN 'CASCADE'::text
-        WHEN 'n'::"char" THEN 'SET NULL'::text
-        WHEN 'd'::"char" THEN 'SET DEFAULT'::text
-        WHEN 'r'::"char" THEN 'RESTRICT'::text
-        WHEN 'a'::"char" THEN 'NO ACTION'::text
-        ELSE NULL::text
+        WHEN 'c'::"char" THEN 'CASCADE'
+        WHEN 'n'::"char" THEN 'SET NULL'
+        WHEN 'd'::"char" THEN 'SET DEFAULT'
+        WHEN 'r'::"char" THEN 'RESTRICT'
+        WHEN 'a'::"char" THEN 'NO ACTION'
+        ELSE NULL
     END::information_schema.character_data AS update_rule,
         CASE con.confdeltype
-            WHEN 'c'::"char" THEN 'CASCADE'::text
-            WHEN 'n'::"char" THEN 'SET NULL'::text
-            WHEN 'd'::"char" THEN 'SET DEFAULT'::text
-            WHEN 'r'::"char" THEN 'RESTRICT'::text
-            WHEN 'a'::"char" THEN 'NO ACTION'::text
-            ELSE NULL::text
+            WHEN 'c'::"char" THEN 'CASCADE'
+            WHEN 'n'::"char" THEN 'SET NULL'
+            WHEN 'd'::"char" THEN 'SET DEFAULT'
+            WHEN 'r'::"char" THEN 'RESTRICT'
+            WHEN 'a'::"char" THEN 'NO ACTION'
+            ELSE NULL
         END::information_schema.character_data AS delete_rule
 FROM pg_namespace ncon
     JOIN pg_constraint con ON ncon.oid = con.connamespace
@@ -56,5 +56,5 @@ FROM pg_namespace ncon
     LEFT JOIN pg_class fc ON con.confrelid = fc.oid
     LEFT JOIN pg_constraint pkc ON pkc.oid = d2.refobjid AND (pkc.contype = ANY (ARRAY['p'::"char", 'u'::"char"])) AND pkc.conrelid = con.confrelid
     LEFT JOIN pg_namespace npkc ON pkc.connamespace = npkc.oid
-WHERE pg_has_role(c.relowner, 'USAGE'::text) OR has_table_privilege(c.oid, 'INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER'::text) OR has_any_column_privilege(c.oid, 'INSERT, UPDATE, REFERENCES'::text)
+WHERE (pg_has_role(c.relowner, 'USAGE') OR has_table_privilege(c.oid, 'INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER') OR has_any_column_privilege(c.oid, 'INSERT, UPDATE, REFERENCES'))
   AND ncon.nspname = ANY($1);

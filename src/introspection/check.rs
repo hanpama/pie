@@ -42,7 +42,6 @@ mod tests {
         tx.execute("CREATE SCHEMA test_check;", &[]).unwrap();
         tx.execute(
             "CREATE TABLE test_check.foo (
-                id SERIAL PRIMARY KEY,
                 name TEXT,
                 CONSTRAINT check_name CHECK (name <> 'foo')
             );",

@@ -226,7 +226,7 @@ fn load_indexes(
         let key_expressions = if let Some(expressions) = iindex.expressions {
             vec![expressions] //
         } else {
-            iindex.key_columns
+            iindex.key_columns.unwrap()
         };
 
         let index = Index {
